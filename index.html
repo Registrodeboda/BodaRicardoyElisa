@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de asistencia- Ricardo y Elisa</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+    h2 { text-align: center; color: #333; }
+    form { background: #fff; padding: 20px; max-width: 400px; margin: auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    label { display: block; margin-top: 10px; }
+    input { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+    button { margin-top: 15px; padding: 10px; width: 100%; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background-color: #218838; }
+    #error-message { color: red; font-size: 0.9em; text-align: center; margin-top: 15px; display: none; }
+    #success-message { color: green; font-size: 0.9em; text-align: center; margin-top: 15px; display: none; }
+  </style>
+</head>
+<body>
+
+<h2>Registro de Asistencia - Boda de Ricardo y Elisa</h2>
+<form id="bodaForm">
+  <label for="codigo">Código de invitado:</label>
+  <input type="text" id="codigo" name="codigo" required>
+  
+  <label for="nombre">Nombre del invitado:</label>
+  <input type="text" id="nombre" name="nombre" required>
+
+  <label for="asistentes">Número de asistentes:</label>
+  <input type="number" id="asistentes" name="asistentes" min="1" required>
+
+  <button type="submit">Confirmar asistencia</button>
+</form>
+
+<div id="error-message"></div>
+<div id="success-message"></div>
+
+<script>
+  const codigosPases = { "MAMA2": 2, "PAPA2": 2, "OSCA4": 4, "MARC3": 3, "MARTH3": 3, "RAFA2": 2, "FAMPELO4": 4, "FAMPAPE5": 5, "FAMGUPE2": 2, "FAMSOP2": 2, "FAMPEM2": 2, "FAMPELU2": 2, "FAMPEDI2": 2, "FAMCOGU1": 1, "FAMCOGU3": 3, "FAMCAGU5": 5, "FAMMOGU2": 2, "FAMPE2": 2, "FAMMAM2": 2, "FAMCHOC3": 3, "GABI1": 1, "OSCA2": 2, "DUFF2": 2, "HILL2": 2, "LUIS1": 1, "MONO1": 1, "ELEN2": 2, "LUIS2": 2, "EDD2": 2, "ALDO1": 1, "EDGA2": 2, "IRIS2": 2, "MAGALY": 2, "BONN2": 2, "MAMACLA2": 2, "PAPARIC2": 2, "PAME2": 2, "KEVI2": 2, "FAMCE1": 1, "FAMSUMA3": 3, "FAMCRLA4": 4, "FAMRI03": 3, "FAMHUMAS6": 6, "FAMA1": 1, "FAMLURO2": 2, "FAMER1": 1, "FAMCH1": 1, "FAMMIVO2": 2, "FAMFRM02": 2, "FAMFLMO2": 2, "FAMLICO2": 2, "FAMHOBU2": 2, "FAMHEC4": 4, "FERN2": 2, "DIEG2": 2, "STEP2": 2, "OMAR2": 2, "LALI1": 1, "LALI2": 1, "ALEJ2": 2, "DANI1": 1, "ALEX1": 1, "PAOL2": 2, "FIDE2": 2, "FERN1": 1, "JUANFR2": 2, "CRIS1": 1, "LIZZ1": 1, "MELI2": 2 }; // Add your codes
+
+  const form = document.getElementById("bodaForm");
+  const errorMessage = document.getElementById("error-message");
+  const successMessage = document.getElementById("success-message");
+
+  function showError(message) {
+    errorMessage.style.display = "block";
+    errorMessage.textContent = message;
+    successMessage.style.display = "none";
+  }
+
+  function showSuccess(message) {
+    successMessage.style.display = "block";
+    successMessage.textContent = message;
+    errorMessage.style.display = "none";
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const codigo = document.getElementById("codigo").value.trim().toUpperCase();
+    const nombre = document.getElementById("nombre").value.trim();
+    const asistentes = parseInt(document.getElementById("asistentes").value, 10);
+
+    if (!codigosPases[codigo] || asistentes > codigosPases[codigo]) {
+      showError(`Invalid code or attendees exceed limit for code "${codigo}".`);
+      return;
+    }
+
+
+
+    fetch("https://script.google.com/macros/s/AKfycbyyyZCnZSB3oKdoLFam8M83B-oOCG7ulalUlslffs0iqGz-SNMgOqJ6hpWfO2g_0taO/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }, // Use standard header
+      body: new URLSearchParams({
+        codigo: codigo,
+        nombre: nombre,
+        asistentes: asistentes
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === "ok") {
+        showSuccess("¡Gracias por confirmar su asistencia!");
+      } else {
+        showError(data.message || "An error occurred.");
+      }
+    })
+    .catch(error => {
+      showError("Failed to submit: " + error.message);
+      console.error("Error:", error);
+    });
+
+    
+  });
+</script>
+
+</body>
+</html>
