@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Registro de asistencia- Ricardo y Elisa</title>
+  <title>Registro de asistencia - Ricardo y Elisa</title>
   <style>
     body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
     h2 { text-align: center; color: #333; }
@@ -35,11 +35,47 @@
 <div id="success-message"></div>
 
 <script>
-  const codigosPases = { "MAMA2": 2, "PAPA2": 2, "OSCA4": 4, "MARC3": 3, "MARTH3": 3, "RAFA2": 2, "FAMPELO4": 4, "FAMPAPE5": 5, "FAMGUPE2": 2, "FAMSOP2": 2, "FAMPEM2": 2, "FAMPELU2": 2, "FAMPEDI2": 2, "FAMCOGU1": 1, "FAMCOGU3": 3, "FAMCAGU5": 5, "FAMMOGU2": 2, "FAMPE2": 2, "FAMMAM2": 2, "FAMCHOC3": 3, "GABI1": 1, "OSCA2": 2, "DUFF2": 2, "HILL2": 2, "LUIS1": 1, "MONO1": 1, "ELEN2": 2, "LUIS2": 2, "EDD2": 2, "ALDO1": 1, "EDGA2": 2, "IRIS2": 2, "MAGALY": 2, "BONN2": 2, "MAMACLA2": 2, "PAPARIC2": 2, "PAME2": 2, "KEVI2": 2, "FAMCE1": 1, "FAMSUMA3": 3, "FAMCRLA4": 4, "FAMRI03": 3, "FAMHUMAS6": 6, "FAMA1": 1, "FAMLURO2": 2, "FAMER1": 1, "FAMCH1": 1, "FAMMIVO2": 2, "FAMFRM02": 2, "FAMFLMO2": 2, "FAMLICO2": 2, "FAMHOBU2": 2, "FAMHEC4": 4, "FERN2": 2, "DIEG2": 2, "STEP2": 2, "OMAR2": 2, "LALI1": 1, "LALI2": 1, "ALEJ2": 2, "DANI1": 1, "ALEX1": 1, "PAOL2": 2, "FIDE2": 2, "FERN1": 1, "JUANFR2": 2, "CRIS1": 1, "LIZZ1": 1, "MELI2": 2 }; // Add your codes
+  const codigosPases = { 
+    "MAMA2": 2, "PAPA2": 2, "OSCA4": 4, "MARC3": 3, "MART5": 5, "RAFA2": 2, 
+    "FAMPELO4": 4, "FAMPAPE6": 6, "FAMGUPE2": 2, "FAMSOPE2": 2, "FAMPEMA2": 2, 
+    "FAMPEYE3": 3, "FAMPEDI2": 2, "FAMCOGU1": 1, "FAMCOGU3": 3, "FAMCAGU5": 5, 
+    "FAMGU6": 6, "FAMGU3": 3, "FAMDO1": 1, "FAMMOGU2": 2,"FAMMEOC4": 4, "FAMPE2": 2,
+    "FAMANMA2": 2, "FAMCHCO3": 3,"MARI2": 2, "OSCA2": 2, "DUFF2": 2, "HILL2": 2, 
+    "LUIS1": 1, "MONI1": 1,"ELEN2": 2, "LUIS2": 2, "GABB1": 1, "LARI1": 1, "DANA2": 2,
+    "MARC2": 2,"SINA2": 2, "EDDY2": 2, "CHUY2": 2, "EDGAMORA2": 2, "ALDO1": 1, "PAPÁ4": 4,
+    "MAMÁ3": 3, "EDGA2": 2, "SEND2": 2, "IRIS2": 2, "MAIK2": 2, "MAGA2": 2,
+    "DIAN2": 2, "MAMACLA2": 2, "PAPARIC2": 2, "PAME2": 2, "LALO2": 2, "KEVI2": 2,
+    "FAMJUIS4": 4, "FAMCE1": 1, "FAMSUME3": 3, "FAMCRLA4": 4, "FAMRIJO3": 3,
+    "FAMHUMA6": 6, "FAMAB1": 1, "FAMLURO2": 2, "FAMRE1": 1, "FAMCH1": 1,
+    "FAMVIMO2": 2, "FAMFRMO2": 2, "FAMFLMO2": 2, "FAMLICO2": 2, "FAMHOBU2": 2,
+    "FAMHECA4": 4, "DIEG2": 2, "FERN2": 2, "LUISFERN2": 2, "OMAR2": 2, "DANIA1": 1,
+    "MART2": 2, "DANO1": 1, "LAIL1": 1, "ALEJ2": 2, "DANI1": 1, "ALEX1": 1,
+    "RUBI2": 2, "FIDE2": 2, "FERN1": 1, "PAOL2": 2, "STEP2": 2, "JUAN2": 2,
+    "CRIS2": 2, "LIZZ1": 1, "MELI2": 2, "BONN2": 2
+  };
 
   const form = document.getElementById("bodaForm");
   const errorMessage = document.getElementById("error-message");
   const successMessage = document.getElementById("success-message");
+  const codigoInput = document.getElementById("codigo");
+  const asistentesInput = document.getElementById("asistentes");
+
+  // Ajuste de asistentes según código
+  codigoInput.addEventListener("input", () => {
+    const codigo = codigoInput.value.trim().toUpperCase();
+    const max = codigosPases[codigo];
+
+    if (max) {
+      asistentesInput.value = 1;
+      asistentesInput.min = 1;
+      asistentesInput.max = max;
+      asistentesInput.readOnly = false;
+    } else {
+      asistentesInput.value = "";
+      asistentesInput.removeAttribute("min");
+      asistentesInput.removeAttribute("max");
+    }
+  });
 
   function showError(message) {
     errorMessage.style.display = "block";
@@ -56,20 +92,25 @@
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const codigo = document.getElementById("codigo").value.trim().toUpperCase();
+    const codigo = codigoInput.value.trim().toUpperCase();
     const nombre = document.getElementById("nombre").value.trim();
-    const asistentes = parseInt(document.getElementById("asistentes").value, 10);
+    const asistentes = parseInt(asistentesInput.value, 10);
 
     if (!codigosPases[codigo] || asistentes > codigosPases[codigo]) {
-      showError(`Invalid code or attendees exceed limit for code "${codigo}".`);
+      showError(El código es inválido o el número de asistentes excede el límite permitido (${codigosPases[codigo]}).);
       return;
     }
 
-
+    // 💾 Verifica si ya se usó el código en este navegador
+    const yaUsado = localStorage.getItem("codigo_usado_" + codigo);
+    if (yaUsado) {
+      showError("Este código ya fue utilizado desde este dispositivo.");
+      return;
+    }
 
     fetch("https://script.google.com/macros/s/AKfycbyyyZCnZSB3oKdoLFam8M83B-oOCG7ulalUlslffs0iqGz-SNMgOqJ6hpWfO2g_0taO/exec", {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }, // Use standard header
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         codigo: codigo,
         nombre: nombre,
@@ -79,17 +120,18 @@
     .then(response => response.json())
     .then(data => {
       if (data.status === "ok") {
+        localStorage.setItem("codigo_usado_" + codigo, "true"); // Guarda bloqueo
         showSuccess("¡Gracias por confirmar su asistencia!");
+        form.reset();
+        form.style.display = "none";
       } else {
-        showError(data.message || "An error occurred.");
+        showError(data.message || "Ocurrió un error.");
       }
     })
     .catch(error => {
-      showError("Failed to submit: " + error.message);
+      showError("Error al enviar los datos: " + error.message);
       console.error("Error:", error);
     });
-
-    
   });
 </script>
 
